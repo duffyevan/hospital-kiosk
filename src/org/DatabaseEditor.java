@@ -245,7 +245,7 @@ public class DatabaseEditor {
 
         ArrayList<Integer> neighbor_ids = new ArrayList<Integer>();
         ResultSet res4 = dbc.send_Command(
-            "select pid1,pid2 from Neighbors where pid1 = " + pid + "OR pid2 = " + pid).get(0);
+            "select pid1,pid2 from Neighbor where pid1 = " + pid + " OR pid2 = " + pid).get(0);
         while (res4.next()) {
           int pid1 = res4.getInt("Pid1");
           int pid2 = res4.getInt("Pid1");
@@ -298,7 +298,7 @@ public class DatabaseEditor {
   public boolean removeNeighbor(int pid1, int pid2) {
 
     dbc.send_Command(
-        "delete from Neighbor where pid1 = " + pid1 + " + or pid2 = " + pid2 + "); \n");
+        "delete from Neighbor where pid1 = " + pid1 + " or pid2 = " + pid2 + "); \n");
     return true;
   }
 

@@ -1,4 +1,5 @@
 import Definitions.Physician;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.DatabaseController;
@@ -70,5 +71,96 @@ public class TestDB {
         .assertEquals(physician1.getLocations().get(1), dbe.get_physician(1).getLocations().get(1));
   }
 
+  @Test
+  void testGetPoint1(){
+    Point p5 = new Point(2334, 1024, "", 5, new ArrayList<>(Arrays.asList(2, 1)), 4);
+    Assertions.assertEquals(p5.getCost(), dbe.get_point(5).getCost());
+  }
+
+  @Test
+  void testGetPoint2(){
+    Point p5 = new Point(2334, 1024, "", 5, new ArrayList<>(Arrays.asList(2, 1)), 4);
+    Assertions.assertEquals(p5.getName(), dbe.get_point(5).getName());
+  }
+
+
+  @Test
+  void testUpdateAllPoints(){
+    Point p6 = new Point(1025, 2044, "6", 6, new ArrayList<>(Arrays.asList(2, 3, 7)), 4);
+    Point p7 = new Point(2024, 1047, "7", 7, new ArrayList<>(Arrays.asList(1, 8,6)), 4);
+    Point p8 = new Point(1024, 1029, "8", 8, new ArrayList<>(Arrays.asList(2, 1, 7)), 4);
+
+    ArrayList<Point> ap = new ArrayList<Point>(Arrays.asList(p6,p7,p8));
+
+    dbe.update_points(ap);
+    Assertions.assertEquals(ap.get(1).getName(), dbe.get_point(7).getName());
+
+  }
+
+  @Test
+  void testGetAllPoints() throws SQLException{
+    Point p1 = new Point(1024, 2048, "", 1, new ArrayList<>(Arrays.asList(2, 3, 5, 4)), 4);
+    Point p2 = new Point(2024, 1048, "", 2, new ArrayList<>(Arrays.asList(1, 3, 5)), 4);
+    Point p3 = new Point(1024, 1024, "", 3, new ArrayList<>(Arrays.asList(2, 1, 4)), 4);
+    Point p4 = new Point(2345, 1048, "", 4, new ArrayList<>(Arrays.asList(1, 3)), 4);
+    Point p5 = new Point(2334, 1024, "", 5, new ArrayList<>(Arrays.asList(2, 1)), 4);
+    Point p6 = new Point(1025, 2044, "6", 6, new ArrayList<>(Arrays.asList(2, 3, 7)), 4);
+    Point p7 = new Point(2024, 1047, "7", 7, new ArrayList<>(Arrays.asList(1, 8,6)), 4);
+    Point p8 = new Point(1024, 1029, "8", 8, new ArrayList<>(Arrays.asList(2, 1, 7)), 4);
+
+    int i;
+    int index = 0;
+    ArrayList<Point> points = dbe.getAllPoints();
+    for(i = 0;i < points.size();i++){
+      if(points.get(i).getId() == p7.getId()){
+        index = i;
+        break;
+      }
+    }
+    Assertions.assertEquals(points.get(index).getId(), p7.getId());
+    Assertions.assertEquals(points.get(index).getNeighbors().contains(8), true);
+    Assertions.assertEquals(points.size(), 8);
+
+  }
+
+
+
+  @Test
+  void testUpdateAllPhysicians() throws  SQLException{
+    Physician physician4 = new Physician("Evan2", "Duffy2", "Doctor Professor", 4,
+        new ArrayList<>(Arrays.asList(1, 2)));
+    Physician physician5 = new Physician("Tom2", "White2", "Mister Doctor Professor", 5,
+        new ArrayList<>(Arrays.asList(3)));
+    Physician physician6 = new Physician("Spyros2", "Antonatos2", "Doctor Professor", 6,
+        new ArrayList<>(Arrays.asList(3, 4, 5)));
+
+    ArrayList<Physician> ap = new ArrayList<Physician>(Arrays.asList(physician4,physician5,physician6));
+
+    dbe.updatePhysicians(ap);
+    Assertions.assertEquals(ap.get(1).getTitle(), dbe.get_physician(5).getTitle());
+    Assertions.assertEquals(dbe.get_physician(6).getLocations().contains(5), true);
+
+
+  }
+
+  @Test
+  void testGetAllPhysicians() throws SQLException{
+    Physician physician5 = new Physician("Tom2", "White2", "Mister Doctor Professor", 5,
+        new ArrayList<>(Arrays.asList(3)));
+
+    int i;
+    int index = 0;
+    ArrayList<Physician> physicians = dbe.getAllPhysicians();
+    for(i = 0;i < physicians.size();i++){
+      if(physicians.get(i).getID() == physician5.getID()){
+        index = i;
+        break;
+      }
+    }
+    Assertions.assertEquals(physicians.get(index).getID(), physician5.getID());
+    Assertions.assertEquals(physicians.get(index).getLocations().contains(3), true);
+    Assertions.assertEquals(physicians.size(), 6);
+
+  }
 
 }
