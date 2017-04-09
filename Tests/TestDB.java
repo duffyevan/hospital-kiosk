@@ -139,6 +139,7 @@ public class TestDB {
     dbe.updatePhysicians(ap);
     Assertions.assertEquals(ap.get(1).getTitle(), dbe.get_physician(5).getTitle());
     Assertions.assertEquals(dbe.get_physician(6).getLocations().contains(5), true);
+    Assertions.assertEquals(dbe.getAllPhysicians().size(),3);
 
 
   }

@@ -11,7 +11,7 @@ import org.Point;
  * Created by evan on 3/25/17.
  * This Object will add, remove and edit our hospital database
  */
-public class DatabaseEditor {
+public class DatabaseEditor implements DatabaseInterface{
 
   DatabaseController dbc = null;
 

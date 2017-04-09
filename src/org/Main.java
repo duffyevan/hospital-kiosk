@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
   static DatabaseController dbc;
-  static DatabaseEditor dbe;
+  static DatabaseInterface dbe;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
