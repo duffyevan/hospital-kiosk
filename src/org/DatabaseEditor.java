@@ -23,17 +23,17 @@ public class DatabaseEditor {
   /////// Physician /////////
   ///////////////////////////
 
-  boolean removePhysician(String first_name, String last_name, String title) {
+  public boolean removePhysician(String first_name, String last_name, String title) {
     dbc.send_Command(
         "delete from physician (first_name, last_name, title) values ('" + first_name + "','"
             + last_name + "','" + title + "')");
     return true;
   }
 
-  boolean addPhysician(int PID, String first_name, String last_name, String title,
+  public boolean addPhysician(int PID, String first_name, String last_name, String title,
       ArrayList<Integer> array_points) {
     dbc.send_Command(
-        "insert into physician (pid,first_name, last_name, title) values ('" + PID + "','"
+        "insert into physician (pid,first_name, last_name, title) values (" + PID + ",'"
             + first_name + "','"
             + last_name + "','" + title + "')");
 
@@ -44,7 +44,7 @@ public class DatabaseEditor {
     return true;
   }
 
-  Physician get_physician(int pid) {
+  public Physician get_physician(int pid) {
     ResultSet res = dbc.send_Command("select * from physician where pid = " + pid).get(0);
     int c = 0;
     Physician my_p = null;
@@ -95,7 +95,7 @@ public class DatabaseEditor {
   }
 
 
-  ArrayList<Physician> getAllPhysicians() throws SQLException {
+  public ArrayList<Physician> getAllPhysicians() throws SQLException {
     ArrayList<Physician> physicians = new ArrayList<Physician>();
     ResultSet res = dbc.send_Command("select pid from physician").get(0);
     while (res.next()) {
@@ -110,7 +110,7 @@ public class DatabaseEditor {
   }
 
 
-  boolean updatePhysicians(ArrayList<Physician> ap) throws SQLException {
+  public boolean updatePhysicians(ArrayList<Physician> ap) throws SQLException {
     dbc.send_Command("truncate table Physician;");
     int i;
     for (i = 0; i < ap.size(); i++) {
@@ -125,7 +125,7 @@ public class DatabaseEditor {
   //// Location - Service ///
   ///////////////////////////
 
-  boolean addServiceLocation(String service_name, String md_related, String location_name) {
+  public boolean addServiceLocation(String service_name, String md_related, String location_name) {
     dbc.send_Command(
         "insert into ServiceLocation (lid,sid) select lid,sid from service_location, service where location.name = '"
             + location_name + "', select sid from service where"
@@ -133,7 +133,7 @@ public class DatabaseEditor {
     return true;
   }
 
-  boolean removeServiceLocation(String service_name, String location_name) {
+  public boolean removeServiceLocation(String service_name, String location_name) {
     dbc.send_Command(
         "delete from ServiceLocation  where sid = (select sid from service where name = '"
             + service_name + "') and  lid = (select lid from location where"
@@ -145,17 +145,17 @@ public class DatabaseEditor {
   /// Location - Physician //
   ///////////////////////////
 
-  boolean addPhysicianLocation(int pid_ph, int pid_po) {
+  public boolean addPhysicianLocation(int pid_ph, int pid_po) {
     dbc.send_Command(
-        "insert into Physician_Location (pid_po,pid_ph) values('" + pid_po + "','" + pid_ph
-            + "');\n");
+        "insert into Physician_Location (pid_po,pid_ph) values(" + pid_po + "," + pid_ph
+            + ");\n");
     return true;
   }
 
-  boolean removePhysicianLocation(int pid_ph, int pid_po) {
+  public boolean removePhysicianLocation(int pid_ph, int pid_po) {
     dbc.send_Command(
-        "delete from Physician_Location where pid_ph = '" + pid_ph + "' and pid_po = '" + pid_po
-            + "');\n");
+        "delete from Physician_Location where pid_ph = " + pid_ph + " and pid_po ='" + pid_po
+            + ");\n");
     return true;
   }
 
@@ -163,7 +163,7 @@ public class DatabaseEditor {
   /////////Point/////////
   //////////////////////
 
-  boolean addPoint(Point point) {
+  public boolean addPoint(Point point) {
     int cost = point.getCost();
     int x = point.getXCoord();
     int y = point.getYCoord();
@@ -173,8 +173,8 @@ public class DatabaseEditor {
     ArrayList<Integer> neighbors = point.getNeighbors();
 
     dbc.send_Command(
-        "insert into Point (id,x,y,cost,pid) values (" + id + "," + x + ","
-            + y + "," + cost + "," + id + "); \n");
+        "insert into Point (x,y,cost,pid,floor,name) values (" + x + ","
+            + y + "," + cost + "," + id + "," + floor + ",'" + name + "'); \n");
 
     //add instructions to put node in location
 
@@ -182,18 +182,12 @@ public class DatabaseEditor {
     //this.addLocation(name,"N",floor);
     //this.addPointLocation(name,Integer.parseInt(id));
 
-    int i;
-    ArrayList<Integer> pl = point.getNeighbors();
-    for (i = 0; i < neighbors.size(); i++) {
-      this.addNeighbor(id, pl.get(i));
-      //this.addNeighboring(pl.get(i).id,point.id);
-    }
 
     return true;
   }
 
 
-  boolean removePoint(Point point) {
+  public boolean removePoint(Point point) {
     int cost = point.getCost();
     int x = point.getXCoord();
     int y = point.getYCoord();
@@ -207,17 +201,31 @@ public class DatabaseEditor {
   }
 
 
-  boolean update_points(ArrayList<Point> al) {
+  public boolean update_points(ArrayList<Point> al) {
     dbc.send_Command("truncate table Point;");
     int i;
     for (i = 0; i < al.size(); i++) {
       this.addPoint(al.get(i));
     }
+    //int i;
+
+    int k,l;
+    for (k = 0; k < al.size(); k++) {
+      //this.addPoint(al.get(i));
+      Point point = al.get(k);
+      ArrayList<Integer> neighbor_ids = point.getNeighbors();
+      for (l = 0; l < neighbor_ids.size(); l++) {
+        this.addNeighbor(point.getId(), neighbor_ids.get(l));
+        //this.addNeighboring(pl.get(i).id,point.id);
+      }
+    }
+
+
 
     return true;
   }
 
-  Point get_point(int my_pid) {
+  public Point get_point(int my_pid) {
     Point my_point = null;
     ResultSet res1 = dbc.send_Command("select * from point where pid = " + my_pid).get(0);
     int c = 0;
@@ -266,7 +274,7 @@ public class DatabaseEditor {
   }
 
 
-  ArrayList<Point> getAllPoints() throws SQLException {
+  public ArrayList<Point> getAllPoints() throws SQLException {
     ArrayList<Point> points = new ArrayList<Point>();
     ResultSet res = dbc.send_Command("select pid from point").get(0);
     Point new_point;
@@ -283,14 +291,14 @@ public class DatabaseEditor {
 ///////Neighbor///////
 //////////////////////
 
-  boolean addNeighbor(int pid1,int pid2) {
+  public boolean addNeighbor(int pid1,int pid2) {
 
     dbc.send_Command(
         "insert into Neighbor (pid1,pid2) values (" + pid1 + "," + pid2 + "); \n");
     return true;
   }
 
-  boolean removeNeighbor(int pid1,int pid2) {
+  public boolean removeNeighbor(int pid1,int pid2) {
 
     dbc.send_Command(
         "delete from Neighbor where pid1 = " + pid1 + " + or pid2 = " + pid2 + "); \n");

@@ -18,7 +18,7 @@ public class DatabaseController{
   private String url = "";
   private String driver = "";
 
-  DatabaseController(String _driver, String _url){
+  public DatabaseController(String _driver, String _url){
     this.url = _url;
     this.driver =  _driver;
     try {
@@ -49,23 +49,25 @@ public class DatabaseController{
     ResultSet rs;
     for(i = 0;i < cList.length;i++) {
       command = cList[i];
-      System.out.println("command:" + command);
-      try {
-        stmt = conn.createStatement();
-        rs = stmt.executeQuery(command);
-        listrs.add(rs);
-        //return rs;
-
-      } catch (SQLException e) {
-        System.out.println("Error Querying, Trying Execute...");
+      if (command.length() > 2) {
+        System.out.println("command:" + command);
         try {
-          stmt.execute(command);
-          //listrs.add(rs);
-          System.out.println("Executed Successfully");
+          stmt = conn.createStatement();
+          rs = stmt.executeQuery(command);
+          listrs.add(rs);
+          //return rs;
 
-        } catch (SQLException e2) {
-          e.printStackTrace();
-          System.out.println("Query Error!");
+        } catch (SQLException e) {
+          System.out.println("Error Querying, Trying Execute...");
+          try {
+            stmt.execute(command);
+            //listrs.add(rs);
+            System.out.println("Executed Successfully");
+
+          } catch (SQLException e2) {
+            e.printStackTrace();
+            System.out.println("Query Error!");
+          }
         }
       }
 
