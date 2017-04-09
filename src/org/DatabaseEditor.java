@@ -65,24 +65,24 @@ public class DatabaseEditor {
 
       }
 
-    res.close();
+      res.close();
 
-    if (my_p == null) {
-      System.out.println("no physician found");
-      return null;
-    }
+      if (my_p == null) {
+        System.out.println("no physician found");
+        return null;
+      }
 
-    ResultSet res2 = dbc.send_Command("select * from physician_location where pid_ph = " + pid)
-        .get(0);
+      ResultSet res2 = dbc.send_Command("select * from physician_location where pid_ph = " + pid)
+          .get(0);
 
-    ArrayList<Integer> my_locs = new ArrayList<Integer>();
-    while (res2.next()) {
-      int new_pid2 = res2.getInt("PID_po");
-      my_locs.add(new_pid2);
+      ArrayList<Integer> my_locs = new ArrayList<Integer>();
+      while (res2.next()) {
+        int new_pid2 = res2.getInt("PID_po");
+        my_locs.add(new_pid2);
 
-    }
-    res2.close();
-    my_p.setLocations(my_locs);
+      }
+      res2.close();
+      my_p.setLocations(my_locs);
 
 
     } catch (SQLException e) {
@@ -182,7 +182,6 @@ public class DatabaseEditor {
     //this.addLocation(name,"N",floor);
     //this.addPointLocation(name,Integer.parseInt(id));
 
-
     return true;
   }
 
@@ -209,7 +208,7 @@ public class DatabaseEditor {
     }
     //int i;
 
-    int k,l;
+    int k, l;
     for (k = 0; k < al.size(); k++) {
       //this.addPoint(al.get(i));
       Point point = al.get(k);
@@ -220,8 +219,6 @@ public class DatabaseEditor {
       }
     }
 
-
-
     return true;
   }
 
@@ -229,42 +226,42 @@ public class DatabaseEditor {
     Point my_point = null;
     ResultSet res1 = dbc.send_Command("select * from point where pid = " + my_pid).get(0);
     int c = 0;
-    try{
-    while (res1.next()) {
-      c++;
-      if (c > 1) {
-        System.out.println("that was not supposed to happen. ");
-        break;
-      }
-
-      int floor = res1.getInt("floor");
-      String name = res1.getString("NAME");
-      int pid = res1.getInt("PID");
-      int x = res1.getInt("x");
-      int y = res1.getInt("y");
-      int cost = res1.getInt("cost");
-
-      my_point = new Point(x, y, name, pid, new ArrayList<Integer>(), floor);
-
-      ArrayList<Integer> neighbor_ids = new ArrayList<Integer>();
-      ResultSet res4 = dbc.send_Command(
-          "select pid1,pid2 from Neighbors where pid1 = " + pid + "OR pid2 = " + pid).get(0);
-      while (res4.next()) {
-        int pid1 = res4.getInt("Pid1");
-        int pid2 = res4.getInt("Pid1");
-        if (pid1 != my_pid) {
-          neighbor_ids.add(pid1);
-        } else {
-          neighbor_ids.add(pid2);
+    try {
+      while (res1.next()) {
+        c++;
+        if (c > 1) {
+          System.out.println("that was not supposed to happen. ");
+          break;
         }
 
+        int floor = res1.getInt("floor");
+        String name = res1.getString("NAME");
+        int pid = res1.getInt("PID");
+        int x = res1.getInt("x");
+        int y = res1.getInt("y");
+        int cost = res1.getInt("cost");
+
+        my_point = new Point(x, y, name, pid, new ArrayList<Integer>(), floor);
+
+        ArrayList<Integer> neighbor_ids = new ArrayList<Integer>();
+        ResultSet res4 = dbc.send_Command(
+            "select pid1,pid2 from Neighbors where pid1 = " + pid + "OR pid2 = " + pid).get(0);
+        while (res4.next()) {
+          int pid1 = res4.getInt("Pid1");
+          int pid2 = res4.getInt("Pid1");
+          if (pid1 != my_pid) {
+            neighbor_ids.add(pid1);
+          } else {
+            neighbor_ids.add(pid2);
+          }
+
+        }
+        res4.close();
+
+        my_point.setNeighbors(neighbor_ids);
+
+
       }
-      res4.close();
-
-      my_point.setNeighbors(neighbor_ids);
-
-
-    }
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -291,14 +288,14 @@ public class DatabaseEditor {
 ///////Neighbor///////
 //////////////////////
 
-  public boolean addNeighbor(int pid1,int pid2) {
+  public boolean addNeighbor(int pid1, int pid2) {
 
     dbc.send_Command(
         "insert into Neighbor (pid1,pid2) values (" + pid1 + "," + pid2 + "); \n");
     return true;
   }
 
-  public boolean removeNeighbor(int pid1,int pid2) {
+  public boolean removeNeighbor(int pid1, int pid2) {
 
     dbc.send_Command(
         "delete from Neighbor where pid1 = " + pid1 + " + or pid2 = " + pid2 + "); \n");
@@ -307,24 +304,11 @@ public class DatabaseEditor {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
 //OLD COMMENTED OUT CODE STARTS
 
-
-
 ///////////////////////
-  ///////Neighboring///////
-  //////////////////////
+///////Neighboring///////
+//////////////////////
 /*
   boolean addNeighboring(int pid_n,int pid_p) {
 
@@ -344,7 +328,6 @@ public class DatabaseEditor {
 
 
 */
-
 
 ///////////////////////////
 //////// Location /////////
@@ -371,7 +354,6 @@ public class DatabaseEditor {
 
       return true;
   }*/
-
 
 ///////////////////////
 /////Location -Point///

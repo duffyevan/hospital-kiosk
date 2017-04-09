@@ -56,15 +56,18 @@ public class TestDB {
   }
 
   @Test
-  void testGetFromDB1(){
-    Physician physician1 = new Physician("Evan", "Duffy", "Doctor Professor", 1, new ArrayList<>(Arrays.asList(1, 2)));
+  void testGetFromDB1() {
+    Physician physician1 = new Physician("Evan", "Duffy", "Doctor Professor", 1,
+        new ArrayList<>(Arrays.asList(1, 2)));
     Assertions.assertEquals(physician1.getFirstName(), dbe.get_physician(1).getFirstName());
   }
 
   @Test
-  void testGetFromDB2(){
-    Physician physician1 = new Physician("Evan", "Duffy", "Doctor Professor", 1, new ArrayList<>(Arrays.asList(1, 2)));
-    Assertions.assertEquals(physician1.getLocations().get(1), dbe.get_physician(1).getLocations().get(1));
+  void testGetFromDB2() {
+    Physician physician1 = new Physician("Evan", "Duffy", "Doctor Professor", 1,
+        new ArrayList<>(Arrays.asList(1, 2)));
+    Assertions
+        .assertEquals(physician1.getLocations().get(1), dbe.get_physician(1).getLocations().get(1));
   }
 
 
